@@ -9,7 +9,7 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly CheckoutOptions checkoutOptions;
-    private string pdtToken  = "JWAlFLHqcukijN";
+    private string pdtToken  = "Q1woj27RY1EBsm";
 
     public HomeController(ILogger<HomeController> logger)
     {
@@ -81,28 +81,61 @@ public class HomeController : Controller
             {
                 //This means the payment is completed
                 //You can now mark the order as "Paid" or "Completed" here and start the delivery process
+                Console.Write("Can Start Delivery");
             }
         }
         return result;
     }
 
-    public IActionResult PaymentSuccessReturnUrl(IPNModel ipnModel)
+    public async Task<ActionResult> PaymentSuccessReturnUrl(IPNModel ipnModel)
     {
-        if(ipnModel.Status == "Paid")
-            Console.Write(ipnModel.Status);
+        PDTRequestModel model = new PDTRequestModel(pdtToken, ipnModel.TransactionId, ipnModel.MerchantOrderId);
+        model.UseSandbox = checkoutOptions.UseSandbox;
+        var pdtResponse = await CheckoutHelper.RequestPDT(model);
+        if (pdtResponse.Count() > 0)
+        {
+            if (pdtResponse["Status"] == "Paid")
+            {
+                Console.Write(pdtResponse["Status"]);
+                //This means the payment is completed. 
+                //You can extract more information of the transaction from the pdtResponse dictionary
+                //You can now mark the order as "Paid" or "Completed" here and start the delivery process
+            }
+        }
         else
-            Console.Write(ipnModel.Status);
-        return View("Index");
+        {
+            Console.Write(pdtResponse["Status"]);
+            //This means the pdt request has failed.
+            //possible reasons are 
+            //1. the TransactionId is not valid
+            //2. the PDT_Key is incorrect
+        }
+        return Redirect("/");
     }
 
-    public IActionResult PaymentCancelReturnUrl(IPNModel ipnModel)
+    public async Task<string> PaymentCancelReturnUrl(IPNModel ipnModel)
     {
-        if(ipnModel.Status == "Canceled")
-            Console.Write(ipnModel.Status);
+        PDTRequestModel model = new PDTRequestModel(pdtToken, ipnModel.TransactionId, ipnModel.MerchantOrderId);
+        var pdtResponse = await CheckoutHelper.RequestPDT(model);
+        if (pdtResponse.Count() > 0)
+        {
+            if (pdtResponse["Status"] == "Canceled")
+            {
+                Console.Write(pdtResponse["Status"]);
+                //This means the payment is canceled. 
+                //You can extract more information of the transaction from the pdtResponse dictionary
+                //You can now mark the order as "Canceled" here.
+            }
+        }
         else
-            Console.Write(ipnModel.Status);
-        
-        return View("Index");
+        {
+            Console.Write(pdtResponse["Status"]);
+            //This means the pdt request has failed.
+            //possible reasons are 
+            //1. the TransactionId is not valid
+            //2. the PDT_Key is incorrect
+        }
+        return string.Empty;
     }
 
     private async Task<bool> CheckIPN(IPNModel model)
