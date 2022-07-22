@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Cart";
+}
+
+<form id="myform" method="post">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="db-wrapper">
+                    <div class="db-pricing-eleven db-bk-color-one">
+                        <div class="price">
+                            <img src="~/Content/Images/images (5).jpg" style="height:175px" /><br />
+                        </div>
+                        <div class="plan-div">
+                            <p class="plan-text">
+                                <b style="font-size:1.2em;" class="text-primary">Bag</b><input type="hidden" name="ItemName" value="Bag" style="color:lavenderblush" /><br />
+                                <b>ETB 30.00</b><input type="hidden" name="UnitPrice" value="30" /><br />
+                                <span>Quantity: </span><input type="text" name="Quantity" placeholder="1" value="1" /><br />
+                                <input type="hidden" name="ItemId" value="1"><br />
+                                <button class="btn btn-success sub" type="button">Add to Cart</button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="db-wrapper">
+                    <div class="db-pricing-eleven db-bk-color-one">
+                        <div class="price">
+                            <img src="~/Content/Images/white-ladies-watch-25778407.jpg" style="height:175px" /><br />
+                        </div>
+                        <div class="plan-div">
+                            <p class="plan-text">
+                                <b style="font-size:1.2em;" class="text-primary">Watch</b><input type="hidden" name="ItemName" value="Watch" /><br />
+                                <b>ETB 40.00</b><input type="hidden" name="UnitPrice" value="40" /><br />
+                                <span>Quantity: </span><input type="text" name="Quantity" placeholder="1" value="1" /><br />
+                                <input type="hidden" name="ItemId" value="2"><br />
+                                <button class="btn btn-success sub" type="button">Add to Cart</button>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="db-wrapper">
+                    <div class="db-pricing-eleven db-bk-color-one">
+                        <div class="price">
+                            <img src="~/Content/Images/images (1).jpg" style="height:175px" /><br />
+                        </div>
+                        <div class="plan-div">
+                            <p class="plan-text">
+                                <b style="font-size:1.2em;" class="text-primary">Book</b><input type="hidden" name="ItemName" value="Book" /><br />
+                                <b>ETB 50.00</b><input type="hidden" name="UnitPrice" value="50" /><br />
+                                <span>Quantity: </span><input type="text" name="Quantity" placeholder="1" value="1" /><br />
+                                <input type="hidden" name="ItemId" value="3"><br />
+                                <button class="btn btn-success sub" type="button">Add to Cart</button>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="db-wrapper">
+                    <div class="db-pricing-eleven db-bk-color-one">
+                        <div class="price">
+                            <img src="~/Content/Images/images (2).jpg" style="height:175px" /><br />
+                        </div>
+                        <div class="plan-div">
+                            <p class="plan-text">
+                                <b style="font-size:1.2em;" class="text-primary">Shoe</b><input type="hidden" name="ItemName" value="Shoe" /><br />
+                                <b>ETB 65.00</b><input type="hidden" name="UnitPrice" value="65" /><br />
+                                <span>Quantity: </span><input type="text" name="Quantity" placeholder="1" value="1" /><br />
+                                <input type="hidden" name="ItemId" value="4"><br />
+                                <button class="btn btn-success sub" type="button">Add to Cart</button>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 text-center">
+            <button class="btn btn-primary" type="button" id="checkout" style="width: 30%; min-width:250px; margin-top:50px">Go to Checkout</button>
+        </div>
+    </div>
+
+    
+</form>
