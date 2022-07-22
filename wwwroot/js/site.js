@@ -30,7 +30,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "Home/CheckoutCart",
+            url: "CheckoutCart",
             contentType: "application/json",
             data: JSON.stringify(Items),
             success: function (data) {
