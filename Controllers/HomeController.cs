@@ -15,7 +15,7 @@ public class HomeController : Controller
         string successUrlReturn = "http://localhost:5175/Home/PaymentSuccessReturnUrl"; //"YOUR_SUCCESS_URL";
         string ipnUrlReturn = "http://localhost:5175/Home/IPNDestination"; //"YOUR_IPN_URL";
         string cancelUrlReturn = "http://localhost:5175/Home/PaymentCancelReturnUrl"; //"YOUR_CANCEL_URL";
-        string failureUrlReturn = ""; //"YOUR_FAILURE_URL";
+        string failureUrlReturn = "http://localhost:5175/Home/PaymentFailure"; //"YOUR_FAILURE_URL";
         bool useSandBox = true;
         checkoutOptions = new CheckoutOptions(sellerCode, string.Empty, CheckoutType.Express, useSandBox, null, successUrlReturn, cancelUrlReturn, ipnUrlReturn, failureUrlReturn);
     }
@@ -84,7 +84,7 @@ public class HomeController : Controller
         }
         else
         {
-            Console.Write(pdtResponse["Status"]);
+            return View("/Home/PaymentFailure");
             //This means the pdt request has failed.
             //possible reasons are 
             //1. the TransactionId is not valid
@@ -110,7 +110,7 @@ public class HomeController : Controller
         }
         else
         {
-            Console.Write(pdtResponse["Status"]);
+            return Redirect("/Home/PaymentFailure");
             //This means the pdt request has failed.
             //possible reasons are 
             //1. the TransactionId is not valid
@@ -130,6 +130,11 @@ public class HomeController : Controller
     }
 
     public IActionResult Cart()
+    {
+        return View();
+    }
+
+    public IActionResult PaymentFailure()
     {
         return View();
     }

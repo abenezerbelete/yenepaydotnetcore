@@ -27,21 +27,25 @@ $(document).ready(function () {
     });
     
     $('#checkout').click(function () {
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: "CheckoutCart",
-            contentType: "application/json",
-            data: JSON.stringify(Items),
-            success: function (data) {
-                if (data) {
-                    window.location = data.redirectUrl;
+        if(Items.length === 0)
+        console.log('Empty Items')
+        else{
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "CheckoutCart",
+                contentType: "application/json",
+                data: JSON.stringify(Items),
+                success: function (data) {
+                    if (data) {
+                        window.location = data.redirectUrl;
+                    }
+                },
+                error: function (xhr, status, text) {
+                
                 }
-            },
-            error: function (xhr, status, text) {
-               
-            }
 
-        });
+            });
+        }
     });
 });
