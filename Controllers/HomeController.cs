@@ -6,13 +6,11 @@ namespace yenepaydotnetcore.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly CheckoutOptions checkoutOptions;
     private string pdtToken  = "Q1woj27RY1EBsm";
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController()
     {
-        _logger = logger;
         string sellerCode = "SB1151";
         string successUrlReturn = "http://localhost:5175/Home/PaymentSuccessReturnUrl"; //"YOUR_SUCCESS_URL";
         string ipnUrlReturn = "http://localhost:5175/Home/IPNDestination"; //"YOUR_IPN_URL";
@@ -23,30 +21,13 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public void CheckoutExpress()
+    public ActionResult CheckoutExpress(CheckoutItem item)
     {
-        checkoutOptions.Process = CheckoutType.Express;
-        var itemId = Request.Form["ItemId"];
-        var itemName = Request.Form["ItemName"];
-        var unitPrice = decimal.Parse(Request.Form["UnitPrice"]);
-        var quantity = int.Parse(Request.Form["Quantity"]);
-        var discount = decimal.Parse(Request.Form["Discount"]);
-        var deliveryFee = decimal.Parse(Request.Form["DeliveryFee"]);
-        var handlingFee = decimal.Parse(Request.Form["HandlingFee"]);
-        var tax1 = decimal.Parse(Request.Form["Tax1"]);
-        var tax2 = decimal.Parse(Request.Form["Tax2"]);
-
-        CheckoutItem checkoutitem = new CheckoutItem(itemId, itemName, unitPrice, quantity, tax1, tax2, discount, handlingFee, deliveryFee);
+        CheckoutItem checkoutItem = new CheckoutItem(item.ItemId, item.ItemName, item.UnitPrice, item.Quantity, item.Tax1, item.Tax2, item.Discount, item.HandlingFee, item.DeliveryFee);
         checkoutOptions.OrderId = "12-34"; //"YOUR_UNIQUE_ID_FOR_THIS_ORDER";  //can also be set null
         checkoutOptions.ExpiresAfter = 2880; //"NUMBER_OF_MINUTES_BEFORE_THE_ORDER_EXPIRES"; //setting null means it never expires
-        var url = CheckoutHelper.GetCheckoutUrl(checkoutOptions, checkoutitem);
-        Response.Redirect(url);
-    }
-
-    [HttpGet]
-    public IActionResult Cart()
-    {
-        return View();
+        var url = CheckoutHelper.GetCheckoutUrl(checkoutOptions, checkoutItem);
+        return Redirect(url);
     }
 
     [HttpPost]
@@ -64,7 +45,7 @@ public class HomeController : Controller
         checkoutOptions.ExpiresAfter = 2880; //"NUMBER_OF_MINUTES_BEFORE_THE_ORDER_EXPIRES"; //setting null means it never expires
 
         var url = CheckoutHelper.GetCheckoutUrl(checkoutOptions, Items);
-        return Json(new { redirectUrl = url });
+        return Json(new { redirectUrl = url } );
     }
 
     [HttpPost]
@@ -112,9 +93,10 @@ public class HomeController : Controller
         return Redirect("/");
     }
 
-    public async Task<string> PaymentCancelReturnUrl(IPNModel ipnModel)
+    public async Task<ActionResult> PaymentCancelReturnUrl(IPNModel ipnModel)
     {
         PDTRequestModel model = new PDTRequestModel(pdtToken, ipnModel.TransactionId, ipnModel.MerchantOrderId);
+        model.UseSandbox = checkoutOptions.UseSandbox;
         var pdtResponse = await CheckoutHelper.RequestPDT(model);
         if (pdtResponse.Count() > 0)
         {
@@ -134,7 +116,7 @@ public class HomeController : Controller
             //1. the TransactionId is not valid
             //2. the PDT_Key is incorrect
         }
-        return string.Empty;
+        return Redirect("/");
     }
 
     private async Task<bool> CheckIPN(IPNModel model)
@@ -143,6 +125,11 @@ public class HomeController : Controller
     }
 
     public IActionResult Index()
+    {
+        return View();
+    }
+
+    public IActionResult Cart()
     {
         return View();
     }
